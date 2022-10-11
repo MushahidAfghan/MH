@@ -29,7 +29,7 @@ router.post("/add", async (req, res) => {
     const result = new User(user);
     await result.save();
     res.redirect("/");
-    console.log(result);
+   
   } catch (e) {
     res.status(400).send(e);
   }
@@ -38,13 +38,13 @@ router.post("/add", async (req, res) => {
 router.get("/", async (req, res) => {
   const users = await User.find();
 //   const user2 = JSON.parse(users);
-  console.log(users);
+ 
   if (users) {
     res.render("index", {
       title: "Home Page",
       users:users,
     });
-    console.log(users);
+   
   } else {
     console.log("No User found");
   }
@@ -93,6 +93,35 @@ router.get('/del/:id',async(req,res)=>{
     catch(e)
     {
         res.status(404).send(e)
+    }
+})
+
+
+router.post("/update/:id",async(req,res)=>{
+    const id=req.params.id;
+    const user=await User.findById(id)
+    console.log("---------------------------------------")
+    console.log(user)
+    try{
+        await User.findByIdAndUpdate(id,{
+            name:req.body.name,
+            email:req.body.email,
+            phone:req.body.phone
+        })
+
+        res.redirect("/")
+
+    //     if (users) {
+    // res.render("index", {
+    //   title: "Home Page",
+    //   users:users,
+    // });
+
+    // }
+
+    }
+    catch(e){
+        res.status(400).send(e)
     }
 })
 module.exports = router;
